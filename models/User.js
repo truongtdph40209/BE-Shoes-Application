@@ -1,14 +1,13 @@
 const db = require("../config/db");
 const { Schema, model } = db;
 
+
 const UserSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
+      required: false,
+
     },
     email: { type: String, required: true, unique: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },

@@ -11,7 +11,7 @@ const CategorySchema = new Schema(
       trim: true,
       lowercase: true,
     },
-    description: {
+    logo: {
       type: String,
       required: true,
     },
