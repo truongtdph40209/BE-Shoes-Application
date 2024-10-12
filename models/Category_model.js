@@ -6,14 +6,11 @@ const CategorySchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
+      required: false,
     },
     logo: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {

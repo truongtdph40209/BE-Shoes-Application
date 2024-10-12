@@ -2,27 +2,24 @@
 const db = require("../config/db");
 const { Schema, model } = db;
 
-// Định nghĩa model Product
 const ProductSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
-      trim: true,
-      lowercase: true,
     },
     brand: {
       type: String,
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     categories: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Category', // Tham chiếu đến model Category
+        ref: 'Category',
       },
     ],
     discount: {
@@ -33,22 +30,21 @@ const ProductSchema = new Schema(
       type: String,
       required: true,
     },
-    colors: {
-      type: [String],
-      required: true,
-    },
-    sizes: {
-      type: [String],
-      required: true,
-    },
-    images: {
-      type: [String],
-      required: true,
-    },
-    thumbnail: {
-      type: [String],
-      required: true,
-    },
+    colors: [
+      {
+        type: String, 
+      },
+    ],
+    sizes: [
+      {
+        type: String,  
+      },
+    ],
+    images: [
+      {
+        type: String,  
+      },
+    ],
     userGender: {
       type: [String],
       enum: ['male', 'female', 'unisex'],
@@ -56,10 +52,9 @@ const ProductSchema = new Schema(
   },
   {
     collection: "Products",
-    timestamps: true, // Tùy chọn để tự động thêm createdAt và updatedAt
+    timestamps: true,
   }
 );
 
-// Tạo model Product
 const Product = model("Product", ProductSchema);
 module.exports = Product;

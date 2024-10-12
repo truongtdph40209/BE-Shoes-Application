@@ -58,11 +58,14 @@ exports.signin = async(req, res) => {
             messages: ["Mật khẩu không chính xác"],
         });
     }
-    const token = jwt.sign({ userId: user._id }, "123456", {
+    const token = jwt.sign({ userId: user._id, role: user.role }, "123456", {
         expiresIn: "7d",
     });
     return res.status(StatusCodes.OK).json({
-        user,
+        user: {
+            email: user.email,
+            role: user.role // Thêm thông tin vai trò
+        },
         token,
     });
 };
@@ -80,3 +83,39 @@ exports.checkrole = async(req, res, next) => {
     }
 }
 exports.logout = async(req, res) => {};
+
+exports.getUserData = async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "123456");
+        const user = await User.findById(decoded.userId).select('-password');
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "User not found" });
+        }
+        return res.status(StatusCodes.OK).json(user);
+    } catch (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Invalid token" });
+    }
+};
+
+// Middleware xác thực token
+exports.authenticateToken = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET || "123456", (err, user) => {
+        if (err) {
+            return res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden" });
+        }
+        req.user = user;
+        next();
+    });
+};

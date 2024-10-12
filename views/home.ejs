@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Sản Phẩm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Danh Sách Sản Phẩm</h2>
+        <table class="table table-bordered" id="productTable">
+            <thead>
+                <tr>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Giá</th>
+                    <th>Danh Mục</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sản phẩm sẽ được chèn ở đây -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal sửa sản phẩm -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Sửa Sản Phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="productId">
+                        <div class="form-group">
+                            <label for="productName">Tên Sản Phẩm</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Giá</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Danh Mục (ID)</label>
+                            <input type="text" class="form-control" id="productCategories" required>
+                        </div>
+
+
+
+
+
+                        <div class="form-group">
+                            <label for="productCategories">Brand</label>
+                            <input type="text" class="form-control" id="productBrand" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Discount</label>
+                            <input type="text" class="form-control" id="productDiscount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Description</label>
+                            <input type="text" class="form-control" id="productDescription" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Color</label>
+                            <input type="text" class="form-control" id="productColor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Size</label>
+                            <input type="text" class="form-control" id="productSize" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategories">Images</label>
+                            <input type="text" class="form-control" id="productImage" required>
+                        </div>
+                    
+
+
+
+
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Lưu Thay Đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/product');
+                const products = await response.json();
+
+                const tbody = document.querySelector('#productTable tbody');
+                tbody.innerHTML = ''; // Xóa nội dung hiện tại
+
+                products.forEach(product => {
+                    const tr = document.createElement('tr');
+                    const categoryIds = product.categories.map(category => category._id || category).join(', ');
+                    tr.innerHTML = `
+                        <td>${product.name}</td>
+                        <td>${product.price}</td>
+                        <td>${categoryIds}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editProduct('${product._id}')">Sửa</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct('${product._id}')">Xóa</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu:', error);
+            }
+        };
+
+        const editProduct = (id) => {
+            // Lấy thông tin sản phẩm từ API
+            fetch(`http://localhost:3000/product/${id}`)
+                .then(response => response.json())
+                .then(product => {
+                    // Điền thông tin vào form
+                    document.getElementById('productId').value = product._id;
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productCategories').value = product.categories.map(c => c._id).join(', ');
+                    
+                    document.getElementById('productBrand').value = product.brand
+                    document.getElementById('productDiscount').value = product.discount;
+                    document.getElementById('productDescription').value = product.description;
+                    document.getElementById('productColor').value = product.colors.join(', ');
+                    document.getElementById('productSize').value = product.sizes.join(', ');
+                    document.getElementById('productImage').value = product.images.join(', ');
+                    // Hiện modal
+                    $('#editProductModal').modal('show');
+                })
+                .catch(error => console.error('Lỗi khi lấy thông tin sản phẩm:', error));
+        };
+
+        const saveProduct = async () => {
+            const id = document.getElementById('productId').value;
+
+            const productBrand = document.getElementById('productBrand').value;
+
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value
+            const productCategory = document.getElementById('productCategories').value.split(',').map(id => id.trim())
+            const productDiscount = document.getElementById('productDiscount').value;
+            const productDescription = document.getElementById('productDescription').value;
+            const productColors = document.getElementById('productColor').value.split(',').map(color => color.trim());
+            const productSizes = document.getElementById('productSize').value.split(',').map(size => size.trim());
+            const productImages = document.getElementById('productImage').value.split(',').map(image => image.trim());
+
+            const updatedProduct = {
+                name: productName,
+                price: productPrice,
+                categories: productCategory,
+                brand: productBrand,
+                discount: productDiscount,
+                description: productDescription,
+                colors: productColors,
+                sizes: productSizes,
+                images: productImages,
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/product/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedProduct),
+                });
+
+                if (response.ok) {
+                    alert('Sản phẩm đã được cập nhật thành công!');
+                    fetchProducts(); // Cập nhật danh sách sản phẩm
+                    $('#editProductModal').modal('hide'); // Đóng modal
+                } else {
+                    alert('Có lỗi xảy ra khi cập nhật sản phẩm.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi cập nhật sản phẩm:', error);
+            }
+        };
+
+        const deleteProduct = async (id) => {
+            const confirmDelete = confirm(`Bạn có chắc chắn muốn xóa sản phẩm có ID: ${id}?`);
+            if (confirmDelete) {
+                try {
+                    const response = await fetch(`http://localhost:3000/product/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Sản phẩm đã được xóa thành công!');
+                        fetchProducts(); // Cập nhật danh sách sản phẩm
+                    } else {
+                        alert('Có lỗi xảy ra khi xóa sản phẩm.');
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi xóa sản phẩm:', error);
+                }
+            }
+        };
+
+        // Gọi hàm để fetch dữ liệu khi trang được tải
+        document.addEventListener('DOMContentLoaded', fetchProducts);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

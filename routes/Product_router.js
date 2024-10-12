@@ -6,7 +6,7 @@ const {
   getAllProducts,
   getProductById,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 } = require('../controllers/Product_ctrl');
 
 // Định nghĩa các route
@@ -18,13 +18,15 @@ router.post('/product', createProduct); // POST /product
 router.get('/product', getAllProducts); // GET /product
 
 // Lấy một sản phẩm theo ID
-router.get('/product:id', getProductById); // GET /product/:id
+router.get('/product/:id', getProductById); // GET /product/:id
 
 // Cập nhật một sản phẩm theo ID
-router.put('/product:id', updateProduct); // PUT /product/:id
+router.put('/product/:id', updateProduct); // PUT /product/:id
 
 // Xóa một sản phẩm theo ID
-router.delete('/product:id', deleteProduct); // DELETE /product/:id
+router.delete('/product/:id', deleteProduct); // DELETE /product/:id
+
+
 
 // Xuất router
 module.exports = router;
