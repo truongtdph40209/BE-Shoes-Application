@@ -1,14 +1,11 @@
+
 const db = require("../config/db");
 const { Schema, model } = db;
 
 
 const UserSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: false,
-
-    },
+    name: { type: String, default: function() { return this.email.split('@')[0]; } },
     email: { type: String, required: true, unique: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     password: { type: String, minlength: 6, required: true },

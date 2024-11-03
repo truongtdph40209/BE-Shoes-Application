@@ -1,10 +1,5 @@
 const Joi = require("joi");
 exports.registerSchema = Joi.object({
-    name: Joi.string().required().trim().messages({
-        "any.required": "Username là bắt buộc",
-        "string.empty": "Username không được để trống",
-        "string.trim": "Username không được chứa khoảng trắng"
-    }),
     email: Joi.string().email().required().messages({
         "string.email": "Email không hợp lệ",
         "any.required": "Email là bắt buộc",

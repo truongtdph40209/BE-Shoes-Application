@@ -17,12 +17,12 @@ exports.signup = async(req, res) => {
     }
     // kiểm tra xem username đã tồn tại chưa
     const exitEmail = await User.findOne({ email });
-    const exitUser = await User.findOne({ name });
-    if (exitUser) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            messages: ["Tên tài khoản đã tồn tại"],
-        });
-    }
+    // const exitUser = await User.findOne({ name });
+    // if (exitUser) {
+    //     return res.status(StatusCodes.BAD_REQUEST).json({
+    //         messages: ["Tên tài khoản đã tồn tại"],
+    //     });
+    // }
     if (exitEmail) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             messages: ["Email đã tồn tại"],
