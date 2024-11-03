@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sản Phẩm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Thêm Sản Phẩm Mới</h2>
+        <form id="addProductForm">
+            <div class="form-group">
+                <label for="productName">Tên Sản Phẩm</label>
+                <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm" required>
+            </div>
+            <div class="form-group">
+                <label for="productPrice">Giá</label>
+                <input type="number" class="form-control" id="productPrice" placeholder="Nhập giá sản phẩm" required>
+            </div>
+            <div class="form-group">
+                <label for="productCategory">Danh Mục (ID)</label>
+                <input type="text" class="form-control" id="productCategory" placeholder="Nhập danh mục sản phẩm" required>
+            </div>
+            <div class="form-group">
+                <label for="productBrand">Thương Hiệu</label>
+                <input type="text" class="form-control" id="productBrand" placeholder="Nhập thương hiệu sản phẩm" required>
+            </div>
+            <div class="form-group">
+                <label for="productDiscount">Giảm Giá (%)</label>
+                <input type="number" class="form-control" id="productDiscount" placeholder="Nhập mức giảm giá" required>
+            </div>
+            <div class="form-group">
+                <label for="productDescription">Mô Tả</label>
+                <textarea class="form-control" id="productDescription" rows="3" placeholder="Nhập mô tả sản phẩm" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="productColor">Màu Sắc</label>
+                <input type="text" class="form-control" id="productColor" placeholder="Nhập màu sắc, ngăn cách bởi dấu phẩy" required>
+            </div>
+            <div class="form-group">
+                <label for="productSize">Kích Thước</label>
+                <input type="text" class="form-control" id="productSize" placeholder="Nhập kích thước, ngăn cách bởi dấu phẩy" required>
+            </div>
+            <div class="form-group">
+                <label for="productImage">Hình Ảnh</label>
+                <input type="text" class="form-control" id="productImage" placeholder="Nhập URL hình ảnh, ngăn cách bởi dấu phẩy" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newProduct = {
+                name: document.getElementById('productName').value,
+                price: document.getElementById('productPrice').value,
+                categories: document.getElementById('productCategory').value.split(',').map(id => id.trim()),
+                brand: document.getElementById('productBrand').value,
+                discount: document.getElementById('productDiscount').value,
+                description: document.getElementById('productDescription').value,
+                colors: document.getElementById('productColor').value.split(',').map(color => color.trim()),
+                sizes: document.getElementById('productSize').value.split(',').map(size => size.trim()),
+                images: document.getElementById('productImage').value.split(',').map(image => image.trim())
+            };
+            
+            try {
+                const response = await fetch('http://localhost:3000/product', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newProduct),
+                });
+
+                if (response.ok) {
+                    alert('Sản phẩm đã được thêm thành công!');
+                    document.getElementById('addProductForm').reset(); // Xóa các trường đã nhập
+                    window.location.href = '/home';
+                } else {
+                    alert('Có lỗi xảy ra khi thêm sản phẩm.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi thêm sản phẩm:', error);
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

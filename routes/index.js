@@ -11,4 +11,9 @@ router.get('/home', async (req, res) => {
   res.render('home'); 
 });
 
+// addproduct
+router.get('/addproduct', async (req, res) => {
+  res.render('addproduct'); 
+});
+
 module.exports = router;

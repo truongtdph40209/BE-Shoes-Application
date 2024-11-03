@@ -24,6 +24,7 @@
                 <!-- Dữ liệu sản phẩm sẽ được chèn ở đây -->
             </tbody>
         </table>
+        <button onclick="handleAdd()" class="btn btn-primary">Add product</button>
     </div>
 
     <!-- Modal sửa sản phẩm -->
@@ -99,6 +100,10 @@
     </div>
 
     <script>
+        const handleAdd = () => {
+            window.location.href = './addproduct'
+        }
+
         const fetchProducts = async () => {
             try {
                 const response = await fetch('http://localhost:3000/product');
