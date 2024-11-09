@@ -1,4 +1,4 @@
-// controllers/productController.js
+
 const Product = require("../models/Product_model");
 
 // Tạo sản phẩm mới
