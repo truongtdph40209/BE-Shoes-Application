@@ -6,7 +6,6 @@ const User = require('../models/User');
 exports.addToCart = async (req, res) => {
   // const userId = req.params.userId; // ID của người dùng
   const {userId, productId, quantity, size } = req.body; // ID sản phẩm và số lượng
-  console.log(size);
   
   
   try {

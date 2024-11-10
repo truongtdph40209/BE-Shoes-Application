@@ -1,17 +1,13 @@
 const db = require("../config/db");
 const { Schema, model } = db;
 
-const OrderStatus = {
-  PENDING: "pending",
-  COMPLETED: "completed",
-  CANCELLED: "cancelled",
-};
-
+// Các phương thức thanh toán
 const PaymentMethod = {
   MOMO: "momo",
   CASH: "cash",
 };
 
+// Định nghĩa schema cho đơn hàng
 const OrderSchema = new Schema(
   {
     user: {
@@ -21,12 +17,7 @@ const OrderSchema = new Schema(
     },
     totalPrice: {
       type: Number,
-      required: true,
-    },
-    orderStatus: {
-      type: String,
-      enum: Object.values(OrderStatus), // Chỉ chấp nhận các giá trị trong OrderStatus
-      default: OrderStatus.PENDING,
+      required: false,
     },
     paymentMethod: {
       type: String,
@@ -37,21 +28,28 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     products: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Shoes", // Tham chiếu đến model Shoes (hoặc sản phẩm bạn muốn)
-        required: true,
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product", // Tham chiếu đến model Product nếu có
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1, 
+        },
+        size: {  // Trường size được thêm vào đây
+          type: String,  // Có thể là một chuỗi mô tả như "S", "M", "L"
+          required: true, 
+        },
       },
     ],
-    userNote: {
-      type: String,
-      trim: true,
-    },
-    note: {
-      type: String,
-      trim: true,
-    },
   },
   {
     collection: "Orders",
@@ -59,7 +57,6 @@ const OrderSchema = new Schema(
   }
 );
 
-// Tạo model Order
 const Order = model("Order", OrderSchema);
 
 module.exports = Order;
